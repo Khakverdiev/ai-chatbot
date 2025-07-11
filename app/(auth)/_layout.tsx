@@ -1,13 +1,18 @@
-import { Slot, Stack, usePathname } from "expo-router";
+import { useTheme } from "@/components/ThemeProvider";
+import { Slot } from "expo-router";
 import React from "react";
-import { Platform, StatusBar, StyleSheet, Text, View } from "react-native";
+import { Platform, StatusBar, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const IntroLayout = () => {
+  const { theme, isDark } = useTheme();
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <Slot />
-      <StatusBar barStyle={"dark-content"} />
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
     </SafeAreaView>
   );
 };
@@ -18,7 +23,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
     flex: 1,
-    backgroundColor: "#fff",
     justifyContent: "space-between",
     paddingBottom: Platform.OS === "ios" ? 0 : 24,
   },
