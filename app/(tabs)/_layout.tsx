@@ -23,12 +23,12 @@ const IntroLayout = () => {
         tabBarInactiveTintColor: theme.colors.textTertiary,
         tabBarShowLabel: true,
         headerStyle: {
-          backgroundColor: theme.colors.background, // 👈 фон заголовка
+          backgroundColor: theme.colors.background,
         },
         headerTitleStyle: {
           fontSize: 20,
           fontWeight: "bold",
-          color: theme.colors.text, // 👈 текст заголовка
+          color: theme.colors.text,
         },
       }}
     >

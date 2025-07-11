@@ -10,18 +10,19 @@ import { router } from "expo-router";
 import { Lock1 } from "iconsax-react-nativejs";
 import { useState } from "react";
 import {
-    ActivityIndicator,
-    KeyboardAvoidingView,
-    Pressable,
-    StyleSheet,
-    Text,
-    View
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 const Login = () => {
   const { theme } = useTheme();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const { login, loading, error, clearError } = useAuthStore();
 
@@ -44,7 +45,7 @@ const Login = () => {
           flex: 1,
           justifyContent: "space-between",
         },
-        { backgroundColor: theme.colors.background }
+        { backgroundColor: theme.colors.background },
       ]}
     >
       <View
@@ -60,7 +61,12 @@ const Login = () => {
           source={require("../../assets/images/purple.png")}
           style={{ width: 125, height: 125 }}
         />
-        <Text style={[{ fontSize: 28, fontWeight: "700" }, { color: theme.colors.text }]}>
+        <Text
+          style={[
+            { fontSize: 28, fontWeight: "700" },
+            { color: theme.colors.text },
+          ]}
+        >
           Welcome Back!
         </Text>
         <Text
@@ -68,7 +74,7 @@ const Login = () => {
             {
               fontSize: 16,
             },
-            { color: theme.colors.textSecondary }
+            { color: theme.colors.textSecondary },
           ]}
         >
           Enter your login details
@@ -84,7 +90,7 @@ const Login = () => {
                 fontSize: 14,
                 fontWeight: "600",
               },
-              { color: theme.colors.error }
+              { color: theme.colors.error },
             ]}
           >
             {error}
@@ -120,7 +126,7 @@ const Login = () => {
             setPassword(text);
             if (error) clearError();
           }}
-          type="password"
+          type={showPassword ? "text" : "password"}
           icon={
             <Lock1
               variant="Bold"
@@ -134,13 +140,22 @@ const Login = () => {
               color={theme.colors.textSecondary}
             />
           }
+          rightIcon={
+            <Pressable onPress={() => setShowPassword(!showPassword)}>
+              <Ionicons
+                name={showPassword ? "eye-off" : "eye"}
+                size={22}
+                color={theme.colors.textSecondary}
+              />
+            </Pressable>
+          }
         />
 
         <Pressable
           style={[
-            styles.button, 
+            styles.button,
             { backgroundColor: theme.colors.primary },
-            loading && { opacity: 0.7 }
+            loading && { opacity: 0.7 },
           ]}
           onPress={handleLogin}
           disabled={loading}
@@ -148,7 +163,11 @@ const Login = () => {
           {loading ? (
             <ActivityIndicator color={theme.colors.background} />
           ) : (
-            <Text style={[styles.buttonText, { color: theme.colors.background }]}>Login</Text>
+            <Text
+              style={[styles.buttonText, { color: theme.colors.background }]}
+            >
+              Login
+            </Text>
           )}
         </Pressable>
 
@@ -180,7 +199,12 @@ const Login = () => {
           justifyContent: "center",
         }}
       >
-        <Text style={[{ fontSize: 14, fontWeight: "600" }, { color: theme.colors.textSecondary }]}>
+        <Text
+          style={[
+            { fontSize: 14, fontWeight: "600" },
+            { color: theme.colors.textSecondary },
+          ]}
+        >
           Don't have an account yet?
         </Text>
         <Pressable onPress={() => router.push("/(auth)/register")}>
@@ -190,7 +214,7 @@ const Login = () => {
                 fontSize: 14,
                 fontWeight: "600",
               },
-              { color: theme.colors.primary }
+              { color: theme.colors.primary },
             ]}
           >
             Register
