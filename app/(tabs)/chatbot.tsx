@@ -1,5 +1,5 @@
-import { Checkbox } from "@/components/UI/Checkbox";
 import { useTheme } from "@/components/ThemeProvider";
+import { Checkbox } from "@/components/UI/Checkbox";
 import MessageInput from "@/components/UI/MessageInput";
 import { AiModels } from "@/models/ai-models";
 import { useAiStore } from "@/store/ai-store";
@@ -8,11 +8,13 @@ import { Image } from "expo-image";
 import { markdownToTxt } from "markdown-to-txt";
 import React, { useEffect, useRef, useState } from "react";
 import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -53,171 +55,302 @@ const Chatbot = () => {
   }, []);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <ScrollView
-        ref={scrollRef}
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+    >
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
       >
-        <View style={styles.robotContainer}>
-          <Image
-            source={require("../../assets/images/robot.png")}
-            style={styles.robotImage}
-          />
-        </View>
+        <ScrollView
+          ref={scrollRef}
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewContent}
+        >
+          <View style={styles.robotContainer}>
+            <Image
+              source={require("../../assets/images/robot.png")}
+              style={styles.robotImage}
+            />
+          </View>
 
-        <View style={styles.contentContainer}>
-          {messages.map((msg, index) => (
-            <View
-              key={index}
-              style={[
-                styles.messageContainer,
-                { backgroundColor: theme.colors.card },
-                msg.sender === "user" && {
-                  alignSelf: "flex-end",
-                  backgroundColor: theme.colors.primary + "20",
-                },
-              ]}
-            >
-              <Text style={[styles.starIcon, { color: theme.colors.primary }]}>✦</Text>
-              <Text style={[styles.messageText, { color: theme.colors.text }]}>{msg.text}</Text>
-            </View>
-          ))}
-          {isThinking && (
-            <View style={[styles.messageContainer, { backgroundColor: theme.colors.card }]}>
-              <Text style={[styles.starIcon, { color: theme.colors.primary }]}>✦</Text>
-              <Text style={[styles.messageText, { color: theme.colors.text }]}>Thinking...</Text>
-            </View>
-          )}
-
-          {showSuggestions && (
-            <View style={[styles.messageContainer, { backgroundColor: theme.colors.card }]}>
-              <Text style={[styles.starIcon, { color: theme.colors.primary }]}>✦</Text>
-              <Text style={[styles.messageText, { color: theme.colors.text }]}>
-                Hi, you can ask me anything about names
-              </Text>
-            </View>
-          )}
-
-          {showSuggestions && (
-            <View style={[styles.messageContainer, { backgroundColor: theme.colors.card }]}>
-              <Text style={[styles.starIcon, { color: theme.colors.primary }]}>✦</Text>
-              <View style={styles.suggestionContent}>
-                <Text style={[styles.messageText, { color: theme.colors.text }]}>
-                  I suggest you some names you can ask me...
+          <View style={styles.contentContainer}>
+            {messages.map((msg, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.messageContainer,
+                  { backgroundColor: theme.colors.card },
+                  msg.sender === "user" && {
+                    alignSelf: "flex-end",
+                    backgroundColor: theme.colors.primary + "20",
+                  },
+                ]}
+              >
+                <Text
+                  style={[styles.starIcon, { color: theme.colors.primary }]}
+                >
+                  ✦
                 </Text>
-                <View style={styles.buttonsGrid}>
-                  <View style={styles.buttonRow}>
-                    <TouchableOpacity
-                      style={[styles.button, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
-                      onPress={() => handleButtonPress("Business names")}
-                    >
-                      <Text style={[styles.buttonText, { color: theme.colors.text }]}>Business names</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.button, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
-                      onPress={() => handleButtonPress("Human names")}
-                    >
-                      <Text style={[styles.buttonText, { color: theme.colors.text }]}>Human names</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.button, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
-                      onPress={() => handleButtonPress("Games name")}
-                    >
-                      <Text style={[styles.buttonText, { color: theme.colors.text }]}>Games name</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.buttonRow}>
-                    <TouchableOpacity
-                      style={[styles.button, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
-                      onPress={() => handleButtonPress("Pet names")}
-                    >
-                      <Text style={[styles.buttonText, { color: theme.colors.text }]}>Pet names</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.button, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
-                      onPress={() => handleButtonPress("Dish names")}
-                    >
-                      <Text style={[styles.buttonText, { color: theme.colors.text }]}>Dish names</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.button, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
-                      onPress={() => handleButtonPress("Character names")}
-                    >
-                      <Text style={[styles.buttonText, { color: theme.colors.text }]}>Character names</Text>
-                    </TouchableOpacity>
+                <Text
+                  style={[styles.messageText, { color: theme.colors.text }]}
+                >
+                  {msg.text}
+                </Text>
+              </View>
+            ))}
+            {isThinking && (
+              <View
+                style={[
+                  styles.messageContainer,
+                  { backgroundColor: theme.colors.card },
+                ]}
+              >
+                <Text
+                  style={[styles.starIcon, { color: theme.colors.primary }]}
+                >
+                  ✦
+                </Text>
+                <Text
+                  style={[styles.messageText, { color: theme.colors.text }]}
+                >
+                  Thinking...
+                </Text>
+              </View>
+            )}
+
+            {showSuggestions && (
+              <View
+                style={[
+                  styles.messageContainer,
+                  { backgroundColor: theme.colors.card },
+                ]}
+              >
+                <Text
+                  style={[styles.starIcon, { color: theme.colors.primary }]}
+                >
+                  ✦
+                </Text>
+                <Text
+                  style={[styles.messageText, { color: theme.colors.text }]}
+                >
+                  Hi, you can ask me anything about names
+                </Text>
+              </View>
+            )}
+
+            {showSuggestions && (
+              <View
+                style={[
+                  styles.messageContainer,
+                  { backgroundColor: theme.colors.card },
+                ]}
+              >
+                <Text
+                  style={[styles.starIcon, { color: theme.colors.primary }]}
+                >
+                  ✦
+                </Text>
+                <View style={styles.suggestionContent}>
+                  <Text
+                    style={[styles.messageText, { color: theme.colors.text }]}
+                  >
+                    I suggest you some names you can ask me...
+                  </Text>
+                  <View style={styles.buttonsGrid}>
+                    <View style={styles.buttonRow}>
+                      <TouchableOpacity
+                        style={[
+                          styles.button,
+                          {
+                            backgroundColor: theme.colors.surface,
+                            borderColor: theme.colors.border,
+                          },
+                        ]}
+                        onPress={() => handleButtonPress("Business names")}
+                      >
+                        <Text
+                          style={[
+                            styles.buttonText,
+                            { color: theme.colors.text },
+                          ]}
+                        >
+                          Business names
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[
+                          styles.button,
+                          {
+                            backgroundColor: theme.colors.surface,
+                            borderColor: theme.colors.border,
+                          },
+                        ]}
+                        onPress={() => handleButtonPress("Human names")}
+                      >
+                        <Text
+                          style={[
+                            styles.buttonText,
+                            { color: theme.colors.text },
+                          ]}
+                        >
+                          Human names
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[
+                          styles.button,
+                          {
+                            backgroundColor: theme.colors.surface,
+                            borderColor: theme.colors.border,
+                          },
+                        ]}
+                        onPress={() => handleButtonPress("Games name")}
+                      >
+                        <Text
+                          style={[
+                            styles.buttonText,
+                            { color: theme.colors.text },
+                          ]}
+                        >
+                          Games name
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={styles.buttonRow}>
+                      <TouchableOpacity
+                        style={[
+                          styles.button,
+                          {
+                            backgroundColor: theme.colors.surface,
+                            borderColor: theme.colors.border,
+                          },
+                        ]}
+                        onPress={() => handleButtonPress("Pet names")}
+                      >
+                        <Text
+                          style={[
+                            styles.buttonText,
+                            { color: theme.colors.text },
+                          ]}
+                        >
+                          Pet names
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[
+                          styles.button,
+                          {
+                            backgroundColor: theme.colors.surface,
+                            borderColor: theme.colors.border,
+                          },
+                        ]}
+                        onPress={() => handleButtonPress("Dish names")}
+                      >
+                        <Text
+                          style={[
+                            styles.buttonText,
+                            { color: theme.colors.text },
+                          ]}
+                        >
+                          Dish names
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[
+                          styles.button,
+                          {
+                            backgroundColor: theme.colors.surface,
+                            borderColor: theme.colors.border,
+                          },
+                        ]}
+                        onPress={() => handleButtonPress("Character names")}
+                      >
+                        <Text
+                          style={[
+                            styles.buttonText,
+                            { color: theme.colors.text },
+                          ]}
+                        >
+                          Character names
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
-          )}
-        </View>
-      </ScrollView>
-      <View style={{ alignItems: "flex-start", paddingLeft: 20}}>
-        <Text style={{ textAlign: "center", padding: 10, color: "#888" }}>
-          model used:{" "}
-          {AiModels.models.find((m) => m.id === selectedModel)?.name ??
-            selectedModel}
-        </Text>
-      </View>
-      <MessageInput
-        placeholder="Generate a name of ...."
-        onSend={async (message) => {
-          setIsThinking(true);
-          setMessages((prev) => [...prev, { text: message, sender: "user" }]);
-          setShowSuggestions(false);
-
-          const response = await generateContent(message, selectedModel);
-          const text = extract(response);
-
-          setIsThinking(false);
-          setMessages((prev) => [
-            ...prev,
-            {
-              text: text
-                ? markdownToTxt(text)
-                : "An error occurred. Please, try again...",
-              sender: "bot",
-            },
-          ]);
-        }}
-        onMicPress={() => console.log("Mic pressed")}
-        additionalControls={
-          <>
-            <TouchableOpacity
-              onPress={() => setShowModelSelector(!showModelSelector)}
-              style={styles.modelButton}
-            >
-              <Ionicons name="options" size={24} color="#6A53E7" />
-            </TouchableOpacity>
-
-            {showModelSelector && (
-              <View style={styles.modelSelector}>
-                {AiModels.models.map((model) => (
-                  <TouchableOpacity
-                    key={model.id}
-                    style={styles.modelOption}
-                    onPress={() => {
-                      setSelectedModel(model.id);
-                      setShowModelSelector(false);
-                    }}
-                  >
-                    <Checkbox
-                      value={selectedModel === model.id}
-                      onValueChange={() => setSelectedModel(model.id)}
-                    />
-                    <View style={styles.modelInfo}>
-                      <Text style={styles.modelName}>{model.name}</Text>
-                      <Text style={styles.modelDesc}>{model.description}</Text>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </View>
             )}
-          </>
-        }
-      />
-    </SafeAreaView>
+          </View>
+        </ScrollView>
+        <View style={{ alignItems: "flex-start", paddingLeft: 20 }}>
+          <Text style={{ textAlign: "center", padding: 10, color: "#888" }}>
+            model used:{" "}
+            {AiModels.models.find((m) => m.id === selectedModel)?.name ??
+              selectedModel}
+          </Text>
+        </View>
+        <MessageInput
+          placeholder="Generate a name of ...."
+          onSend={async (message) => {
+            setIsThinking(true);
+            setMessages((prev) => [...prev, { text: message, sender: "user" }]);
+            setShowSuggestions(false);
+
+            const response = await generateContent(message, selectedModel);
+            const text = extract(response);
+
+            setIsThinking(false);
+            setMessages((prev) => [
+              ...prev,
+              {
+                text: text
+                  ? markdownToTxt(text)
+                  : "An error occurred. Please, try again...",
+                sender: "bot",
+              },
+            ]);
+          }}
+          onMicPress={() => console.log("Mic pressed")}
+          additionalControls={
+            <>
+              <TouchableOpacity
+                onPress={() => setShowModelSelector(!showModelSelector)}
+                style={styles.modelButton}
+              >
+                <Ionicons name="options" size={24} color="#6A53E7" />
+              </TouchableOpacity>
+
+              {showModelSelector && (
+                <View style={styles.modelSelector}>
+                  {AiModels.models.map((model) => (
+                    <TouchableOpacity
+                      key={model.id}
+                      style={styles.modelOption}
+                      onPress={() => {
+                        setSelectedModel(model.id);
+                        setShowModelSelector(false);
+                      }}
+                    >
+                      <Checkbox
+                        value={selectedModel === model.id}
+                        onValueChange={() => setSelectedModel(model.id)}
+                      />
+                      <View style={styles.modelInfo}>
+                        <Text style={styles.modelName}>{model.name}</Text>
+                        <Text style={styles.modelDesc}>
+                          {model.description}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </>
+          }
+        />
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
